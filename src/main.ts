@@ -59,7 +59,7 @@ function showTotalCost() {
   console.log(`\n Total Cost: ${chalk.underline.blue('$'+ totalCost.toPrecision(4).toString())} \n`);
 }
 
-async function estimateCost(run) {
+async function estimateCost(run: any) {
   const cost =  await calculateCost({
     calls: run.successfulModelCalls,
     costCalculators: [new OpenAICostCalculator()],
