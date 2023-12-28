@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "npx tsx src/main.ts",
-    "db": "npx tsx src/db.ts"
+    "db": "npx tsx src/db.ts",
+    "browser": "npx tsx src/browser.ts"
   },
   "author": "Yuval Dikerman",
   "license": "MIT",
