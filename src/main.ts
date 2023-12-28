@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { openai, streamText, calculateCost, DefaultRun, OpenAICostCalculator } from "modelfusion";
+import { openai, streamText, calculateOpenAICompletionCostInMillicents, DefaultRun } from "modelfusion";
 import { createInterface } from 'readline';
 import chalk from 'chalk';
 
@@ -9,8 +9,6 @@ const readline = createInterface({
   input: process.stdin, output: process.stdout
 })
 
-
-let totalCost = 0;
 
 
 async function main() {
@@ -28,8 +26,8 @@ async function main() {
         model: "gpt-3.5-turbo-instruct",
         maxGenerationTokens: 500,
       }),
-        input,
-        { run }
+      input,
+      { run }
     );
 
     for await (const textFragment of textStream) {
@@ -40,12 +38,10 @@ async function main() {
       }
     }
 
-    totalCost = await estimateCost(run);
-    
     main()
 
   })
-  
+
 }
 
 main().catch((error) => {
@@ -53,18 +49,5 @@ main().catch((error) => {
   process.exit(1);
 });
 
-process.on('exit', (code) => showTotalCost())
+process.on('exit', (code) => console.log(chalk.red(`Exit with code ${code}. Goodbye`)))
 
-function showTotalCost() {
-  console.log(`\n Total Cost: ${chalk.underline.blue('$'+ totalCost.toPrecision(4).toString())} \n`);
-}
-
-async function estimateCost(run: any) {
-  const cost =  await calculateCost({
-    calls: run.successfulModelCalls,
-    costCalculators: [new OpenAICostCalculator()],
-  });
-
-  return Number.parseFloat(cost.formatAsDollarAmount({ decimals: 4 }))
-  
-}
