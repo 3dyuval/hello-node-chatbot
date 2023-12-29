@@ -23,14 +23,16 @@ async function main() {
 
       const url = new URL(input);
 
-      let fromCache = true;
-      let page = getPage.get(input);
+      type Page = { createdAt: string, url: string, document: string }
 
-      if (!page) {
+      let fromCache = true;
+      let page = getPage.get(input) as Page | undefined ;
+
+      if (page === undefined) {
         fromCache = false;
-        page = await fetch(url).then(res => res.text());
-        insertPage.run(input, page) // cache
-        page = getPage.get(input);
+        const pageText = await fetch(url).then(res => res.text()) ;
+        insertPage.run(input, pageText as string) // cache
+        page = getPage.get(input) as Page;
       }
 
       if (!page) {

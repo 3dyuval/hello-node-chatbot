@@ -3,12 +3,12 @@
     "strict": true,
     "declaration": true,
     "sourceMap": true,
-    "target": "esnext",
+    "target": "ESNext",
     "lib": [
       "es2020",
       "dom"
     ],
-    "module": "esnext",
+    "module": "NodeNext",
     "types": [
       "node"
     ],
