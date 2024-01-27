@@ -9,6 +9,7 @@ import { visit } from 'unist-util-visit'
 import { remove } from 'unist-util-remove'
 import { filter } from 'unist-util-filter'
 import Stream from 'node:stream'
+import { Readable } from 'stream'
 
 
 config();
@@ -20,7 +21,6 @@ const readline = createInterface({
 
 export default async function browser(input?: string): Promise<Stream.Readable> {
 
-    const stream = new Stream.Readable()
 
     if (!input) {
         throw new Error('No input provided')
@@ -30,7 +30,7 @@ export default async function browser(input?: string): Promise<Stream.Readable> 
     try {
         url = new URL(input).toString();
     } catch {
-        process.stdout.write(chalk.magentaBright('Invalid URL\n'))
+        throw new Error('Invalid URL')
     }
 
     type Page = { createdAt: string, url: string, document: string }
@@ -55,9 +55,45 @@ export default async function browser(input?: string): Promise<Stream.Readable> 
     });
 
 
+    const stream = new Stream.Readable({
+        read() {
+        }
+    })
+
     visit(pageMonad.document, 'element', (node) => {
-        stream.push(JSON.stringify(node))
+        stream.push(JSON.stringify(new CategorizedNodeMonad(node)))
     })
 
     return stream
+}
+
+
+
+export function streamToGenerator(readable: Readable): () => AsyncGenerator<unknown, void, unknown> {
+    let done: boolean | Error = false;
+
+    // Handle 'end' and 'error' events
+    readable.on('end', () => {
+        done = true;
+    });
+    readable.on('error', (err: Error) => {
+        done = err;
+    });
+
+    return async function* generator() {
+        while (!done) {
+            const chunk = await new Promise((resolve, reject) => {
+                readable.once('data', resolve);
+                if (done) {
+                    if (done instanceof Error) reject(done);
+                    else resolve(done);
+                }
+            });
+
+            if (chunk !== undefined) {
+                yield chunk;
+            }
+        }
+        readable.destroy()
+    };
 }

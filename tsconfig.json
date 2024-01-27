@@ -4,6 +4,8 @@
     "declaration": true,
     "sourceMap": true,
     "target": "ESNext",
+    "extends": "@sindresorhus/tsconfig",
+    "jsx": "react",
     "lib": [
       "es2020",
       "dom"

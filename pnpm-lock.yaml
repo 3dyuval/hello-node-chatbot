@@ -17,9 +17,6 @@ dependencies:
   dotenv:
     specifier: 16.3.1
     version: 16.3.1
-  lru-cache:
-    specifier: ^10.1.0
-    version: 10.1.0
   modelfusion:
     specifier: '>= 0.99.0'
     version: 0.104.0
@@ -789,11 +786,6 @@ packages:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
     dependencies:
       get-func-name: 2.0.2
-    dev: false
-
-  /lru-cache@10.1.0:
-    resolution: {integrity: sha512-/1clY/ui8CzjKFyjdvwPWJUYKiFVXG2I2cY0ssG7h4+hwk+XOIX7ZSG9Q7TW8TW3Kp3BUSqgFWBLgL4PJ+Blag==}
-    engines: {node: 14 || >=16.14}
     dev: false
 
   /lru-cache@6.0.0:
