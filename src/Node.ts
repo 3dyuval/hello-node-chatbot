@@ -53,8 +53,7 @@ export class CategorizedNodeMonad implements Node {
     public readonly priority: Degree;
 
     constructor(node: Node) {
-        Object.assign(this, node)
-        this.priority = this.categorize(node);
+        Object.assign(this, node, { properties: { ...node.properties, priority: this.categorize(node) }})
     }
 
     // Monad return

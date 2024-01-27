@@ -1,0 +1,1 @@
+GET http://localhost:8000/html?url=https://www.google.com

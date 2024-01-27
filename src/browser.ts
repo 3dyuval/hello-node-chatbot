@@ -14,11 +14,6 @@ import { Readable } from 'stream'
 
 config();
 
-const readline = createInterface({
-    input: process.stdin, output: process.stdout
-})
-
-
 export default async function browser(input?: string): Promise<Stream.Readable> {
 
 
@@ -35,12 +30,13 @@ export default async function browser(input?: string): Promise<Stream.Readable> 
 
     type Page = { createdAt: string, url: string, document: string }
 
+
     let page = getPage.get(url) as Page | undefined;
     if (page === undefined) {
         const pageText = await fetch(url.toString())
             .then(res => res.text());
 
-        insertPage.run(input, pageText as string) // cache
+        insertPage.run(url, pageText as string) // cache
         page = getPage.get(input) as Page;
     }
 
